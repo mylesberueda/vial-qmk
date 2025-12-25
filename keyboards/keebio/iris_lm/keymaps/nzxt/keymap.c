@@ -80,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_ESC,           KC_CAPS, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LGUI, MO(_GAME_FN), KC_SPC,               KC_ENT,  TL_UPPR, KC_LALT
+                                    KC_LGUI, MO(_GAME_FN), KC_SPC,               KC_ENT,  MO(_FN2), KC_LALT
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
@@ -100,19 +100,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #ifdef RGB_MATRIX_ENABLE
-bool rgb_matrix_indicators_user(void) {
-    // Caps lock indicator: pinkish red on all LEDs
-    if (host_keyboard_led_state().caps_lock) {
-        rgb_matrix_set_color_all(255, 50, 80);
-        return false;
-    }
+void set_rgb_default(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
+    rgb_matrix_sethsv_noeeprom(RGB_MATRIX_DEFAULT_HUE, RGB_MATRIX_DEFAULT_SAT, RGB_MATRIX_DEFAULT_VAL);
+}
 
-    // Game layer indicator: purple
-    uint8_t default_layer = get_highest_layer(default_layer_state);
-    if (default_layer == _GAME) {
-        rgb_matrix_set_color_all(128, 0, 255);
-    }
+void set_rgb_game(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(191, 255, 128);  // Purple
+}
 
-    return false;
+void set_rgb_caps(void) {
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    rgb_matrix_sethsv_noeeprom(248, 200, 255);  // Pinkish-red
+}
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    if (host_keyboard_led_state().caps_lock) return state;  // Caps takes priority
+
+    if (get_highest_layer(state) == _GAME) {
+        set_rgb_game();
+    } else {
+        set_rgb_default();
+    }
+    return state;
+}
+
+bool led_update_user(led_t led_state) {
+    if (led_state.caps_lock) {
+        set_rgb_caps();
+    } else if (get_highest_layer(default_layer_state) == _GAME) {
+        set_rgb_game();
+    } else {
+        set_rgb_default();
+    }
+    return true;
 }
 #endif
