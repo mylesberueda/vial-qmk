@@ -6,6 +6,11 @@
 #define VIAL_UNLOCK_COMBO_ROWS {0,9}
 #define VIAL_UNLOCK_COMBO_COLS {0,5}
 
+// Tri-layer configuration (FN layers are 3, 4, 5)
+#define TRI_LAYER_LOWER_LAYER 3
+#define TRI_LAYER_UPPER_LAYER 4
+#define TRI_LAYER_ADJUST_LAYER 5
+
 // Memory savings
 #define DYNAMIC_KEYMAP_LAYER_COUNT 6
 #define DYNAMIC_KEYMAP_MACRO_COUNT 4
