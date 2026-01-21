@@ -11,6 +11,13 @@
 #define TRI_LAYER_UPPER_LAYER 4
 #define TRI_LAYER_ADJUST_LAYER 5
 
+// Home-row mods configuration
+#define TAPPING_TERM 200
+#define TAPPING_TERM_PER_KEY
+#define PERMISSIVE_HOLD_PER_KEY
+#define QUICK_TAP_TERM 300
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+
 // Memory savings
 #define DYNAMIC_KEYMAP_LAYER_COUNT 6
 #define DYNAMIC_KEYMAP_MACRO_COUNT 4
